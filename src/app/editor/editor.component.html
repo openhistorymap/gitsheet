@@ -1,0 +1,14 @@
+<mat-toolbar>
+    <button mat-icon-button (click)="getData()"><mat-icon>arrow_left</mat-icon></button>
+    {{filename}}
+    <span class="spacer"></span>
+    <button mat-icon-button (click)="chatDrawer.toggle()"><mat-icon>menu</mat-icon></button>
+</mat-toolbar>
+<mat-sidenav-container class="example-container" >
+    <mat-sidenav #chatDrawer mode="over" position="end" opened>Sidenav content</mat-sidenav>
+    <mat-sidenav-content>
+        <div id="x-spreadsheet-demo"></div>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+  
+  
