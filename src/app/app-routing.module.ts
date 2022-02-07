@@ -5,8 +5,8 @@ import { IndexComponent } from './index/index.component';
 import { SelectorComponent } from './selector/selector.component';
 
 const routes: Routes = [
-  {path: 'work', component: SelectorComponent},
-  {path: 'work/:id', component: EditorComponent},
+  {path: 'work/:iid', component: SelectorComponent},
+  {path: 'work/:iid/:id', component: EditorComponent},
   {path: '**', component: IndexComponent}, 
 ];
 

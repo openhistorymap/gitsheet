@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { EventEmitter, Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
@@ -14,6 +14,8 @@ export class GitsheetService {
 
   private user = 'sirmmo@gmail.com'
 
+  public message: EventEmitter<any> = new EventEmitter<any>();
+
   private c: WebSocket;
   constructor(
     private h: HttpClient
@@ -21,6 +23,7 @@ export class GitsheetService {
 
   open(id, file=null){
     this.openObject = {id: id, filename: file};
+    this.connect();
     return of(this.openObject);
   }
 
@@ -40,8 +43,26 @@ export class GitsheetService {
     }));
   }
 
-  connect(): WebSocket{
-    this.c = new WebSocket("ws"+this.SERVER+'/objects/'+this.openObject.id+'/ws?user='+this.user);
-    return this.c
+  chat(text){
+    this.c.send(JSON.stringify({
+      op: 'chat',
+      u: this.user,
+      text: text
+    }))
+    return {
+      op: 'chat',
+      u: this.user,
+      text: text
+    }
   }
+
+  connect(): void{
+    this.c = new WebSocket("ws"+this.SERVER+'/objects/'+this.openObject.id+'/ws?user='+this.user);
+    this.c.onmessage = (data) =>{
+      const d = JSON.parse(data.data);
+      this.message.emit(d);
+    }
+  }
+
+
 }

@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import Spreadsheet from "x-data-spreadsheet";
 import { GitsheetService } from '../gitsheet.service';
 
+const cs: any[] = ["ff8000", "994d00", "fff2e6", "ffb366", "0066b3", "003d6b", "e6f4ff", "66beff", "990099", "5c005c", "ffe6ff", "ff66ff", "ccff00", "7a9900", "faffe6", "e0ff66"]
+
 @Component({
   selector: 'app-editor',
   templateUrl: './editor.component.html',
@@ -15,6 +17,9 @@ export class EditorComponent implements OnInit {
   conn: WebSocket;
   currentCell:{}
   filename: string;
+  chat: any[] = [];
+  ttext = '';
+  connecteds = [];
 
   constructor(
     private gs: GitsheetService,
@@ -24,6 +29,18 @@ export class EditorComponent implements OnInit {
   ngOnInit(): void{
 
     const id = this.ar.snapshot.params.id
+    
+    this.gs.message.subscribe(data=>{
+      console.log(data);
+      if (data.op === 'edit') {
+        const sh = <any>this.spreadsheet.cellText(data.row, data.col, data.value);
+        sh.reRender();
+      } else if (data.op === 'select') {
+      } else if (data.op === 'chat') {
+        this.chat.push(data);
+      }
+    });
+    
     this.gs.open(id).subscribe((data:any) => {
       this.filename = data.filename;
     });
@@ -48,20 +65,17 @@ export class EditorComponent implements OnInit {
       this.gs.edit(text, ri, ci);
     });
 
-    this.conn = this.gs.connect();
-    this.conn.onmessage = (msg) =>{
-      const data = JSON.parse(msg.data);
-      console.log(data);
-      if (data.op === 'edit') {
-        const sh = <any>this.spreadsheet.cellText(data.row, data.col, data.value);
-        sh.reRender();
-      } else if (data.op === 'select') {
-      }
-    }
   }
 
   getData(){
     console.log(this.spreadsheet.getData());
+  }
+
+  input(ex){
+    if(ex.code === 'Enter' && this.ttext.length > 0){
+      this.gs.chat(this.ttext);
+      this.ttext = '';
+    }
   }
 
 }

@@ -1,0 +1,27 @@
+
+.ng-tns-c41-0{
+    flex-direction: column;
+    display: flex;
+}
+.side{
+    width: 200px;
+    padding: 4px;
+    
+ 
+}
+#chat_in{
+    position: fixed;
+}
+#chat{
+    padding-top: 25px;
+    flex: 1 1 1px;
+    overflow-y:auto;
+    font-size: small;
+    .chat_author{
+        font-weight: bold;
+    }
+    
+    .chat_text{
+        padding-left:10px;
+    }
+}
