@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable } from '@angular/core';
-import { of } from 'rxjs';
-import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -10,21 +9,40 @@ export class GitsheetService {
   private SERVER = "s://api.gitsign.com";
 
   private me: string
-  private openObject: {id:string, filename: string};
+  private openObject: any;
 
   private user = 'sirmmo@gmail.com'
 
   public message: EventEmitter<any> = new EventEmitter<any>();
+  public connected: EventEmitter<any> = new EventEmitter<any>();
 
   private c: WebSocket;
   constructor(
     private h: HttpClient
   ) { }
 
-  open(id, file=null){
-    this.openObject = {id: id, filename: file};
-    this.connect();
-    return of(this.openObject);
+  getOrganization(id){
+    return this.h.get('http'+this.SERVER+'/installation/'+id+'/info');
+  }
+  getRepos(id){
+    return this.h.get('http'+this.SERVER+'/installation/'+id);
+  }
+  
+  getRepo(id, rid){
+    return this.h.get('http'+this.SERVER+'/installation/'+id+'/'+rid);
+  }
+  getRepoInfo(id, rid){
+    return this.h.get('http'+this.SERVER+'/installation/'+id+'/'+rid+'/info');
+  }
+  getFiles(id, rid, bid){
+    return this.h.get('http'+this.SERVER+'/installation/'+id+'/'+rid+'/'+bid);
+  }
+
+  open(id, rid, bid, file){
+    return this.h.get('http'+this.SERVER+'/installation/'+id+'/'+rid+'/'+bid+'/'+file).pipe(tap(data => {
+      this.openObject = data;  
+      this.connect();
+    }));
   }
 
   select(row, col) {
@@ -57,12 +75,20 @@ export class GitsheetService {
   }
 
   connect(): void{
-    this.c = new WebSocket("ws"+this.SERVER+'/objects/'+this.openObject.id+'/ws?user='+this.user);
+    this.c = new WebSocket("ws"+this.SERVER+'/objects/'+this.openObject.socket+'/ws?user='+this.user);
     this.c.onmessage = (data) =>{
       const d = JSON.parse(data.data);
       this.message.emit(d);
     }
+    this.c.onopen = () => {
+      this.connected.emit();
+    }
   }
 
-
+  join(){
+    this.c.send(JSON.stringify({
+      op: 'join',
+      u: this.user
+    }));
+  }
 }

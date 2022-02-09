@@ -14,13 +14,17 @@ import { MatButtonModule} from '@angular/material/button';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import {MatListModule} from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
+import { RepoComponent } from './repo/repo.component';
+import { BranchComponent } from './branch/branch.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     EditorComponent,
     IndexComponent,
-    SelectorComponent
+    SelectorComponent,
+    RepoComponent,
+    BranchComponent
   ],
   imports: [
     BrowserModule,

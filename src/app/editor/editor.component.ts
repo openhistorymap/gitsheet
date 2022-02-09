@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import Spreadsheet from "x-data-spreadsheet";
 import { GitsheetService } from '../gitsheet.service';
 
+import { Papa } from 'ngx-papaparse';
+
 const cs: any[] = ["ff8000", "994d00", "fff2e6", "ffb366", "0066b3", "003d6b", "e6f4ff", "66beff", "990099", "5c005c", "ffe6ff", "ff66ff", "ccff00", "7a9900", "faffe6", "e0ff66"]
 
 @Component({
@@ -12,6 +14,11 @@ const cs: any[] = ["ff8000", "994d00", "fff2e6", "ffb366", "0066b3", "003d6b", "
   styleUrls: ['./editor.component.scss']
 })
 export class EditorComponent implements OnInit {
+
+  iid: string;
+  rid: string;
+  bid: string;
+  id: string;
 
   spreadsheet: Spreadsheet;
   conn: WebSocket;
@@ -23,12 +30,16 @@ export class EditorComponent implements OnInit {
 
   constructor(
     private gs: GitsheetService,
-    private ar: ActivatedRoute
+    private ar: ActivatedRoute,
+    private papa: Papa
   ) { }
 
   ngOnInit(): void{
 
-    const id = this.ar.snapshot.params.id
+    this.iid = this.ar.snapshot.params.iid;
+    this.rid = this.ar.snapshot.params.rid;
+    this.bid = this.ar.snapshot.params.bid;
+    this.id = this.ar.snapshot.params.id
     
     this.gs.message.subscribe(data=>{
       console.log(data);
@@ -36,14 +47,33 @@ export class EditorComponent implements OnInit {
         const sh = <any>this.spreadsheet.cellText(data.row, data.col, data.value);
         sh.reRender();
       } else if (data.op === 'select') {
+      } else if (data.op === 'accepted') {
+        this.connecteds = data.users;
+        this.papa.parse(data.data, {
+          complete: (result) => {
+            console.log(result.data);
+            for(let [i, ival] of result.data.entries()){
+              for(let [j, jval] of result.data[i].entries()){
+                this.spreadsheet.cellText(i,j,result.data[i][j]);
+              }
+            };
+            (<any>(this.spreadsheet)).reRender()
+          }
+        });
+        
       } else if (data.op === 'chat') {
         this.chat.push(data);
+      } else if (data.op === 'joined') {
+        this.connecteds.push(data);
       }
     });
     
-    this.gs.open(id).subscribe((data:any) => {
+    this.gs.open(this.iid, this.rid, this.bid, this.id).subscribe((data:any) => {
       this.filename = data.filename;
     });
+    this.gs.connected.subscribe(() => {
+      this.gs.join();
+    })
 
     this.spreadsheet = new Spreadsheet("#x-spreadsheet-demo", {
       showToolbar: false,
@@ -54,9 +84,8 @@ export class EditorComponent implements OnInit {
       },
     });
     this.spreadsheet
-    .loadData({}) // load data
     .change(data =>{
-      console.log(data);
+      console.log('change', data);
     });
     this.spreadsheet.on('cell-selected', (cell, ri, ci) => {
       this.gs.select(ri, ci);
