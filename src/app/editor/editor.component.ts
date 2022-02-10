@@ -6,7 +6,24 @@ import { GitsheetService } from '../gitsheet.service';
 
 import { Papa } from 'ngx-papaparse';
 
-const cs: any[] = ["ff8000", "994d00", "fff2e6", "ffb366", "0066b3", "003d6b", "e6f4ff", "66beff", "990099", "5c005c", "ffe6ff", "ff66ff", "ccff00", "7a9900", "faffe6", "e0ff66"]
+const cs: any[] = [
+  "ff8000", 
+  "994d00", 
+  "fff2e6", 
+  "ffb366", 
+  "0066b3", 
+  "003d6b", 
+  "e6f4ff", 
+  "66beff", 
+  "990099", 
+  "5c005c", 
+  "ffe6ff", 
+  "ff66ff", 
+  "ccff00", 
+  "7a9900", 
+  "faffe6", 
+  "e0ff66"
+]
 
 @Component({
   selector: 'app-editor',
@@ -47,6 +64,8 @@ export class EditorComponent implements OnInit {
         const sh = <any>this.spreadsheet.cellText(data.row, data.col, data.value);
         sh.reRender();
       } else if (data.op === 'select') {
+        const i = this.connecteds.indexOf(data.u);
+        const color = cs[i];
       } else if (data.op === 'accepted') {
         this.connecteds = data.users;
         this.papa.parse(data.data, {

@@ -16,6 +16,7 @@ import {MatListModule} from '@angular/material/list';
 import { FormsModule } from '@angular/forms';
 import { RepoComponent } from './repo/repo.component';
 import { BranchComponent } from './branch/branch.component';
+import {MatTabsModule} from '@angular/material/tabs';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { BranchComponent } from './branch/branch.component';
     MatButtonModule,
     MatSidenavModule,
     MatListModule,
+    MatTabsModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -10,6 +10,8 @@ import { GitsheetService } from '../gitsheet.service';
 export class RepoComponent implements OnInit {
 
   branches: any[];
+  installation: any;
+  repo: any;
 
   constructor(
     private ar: ActivatedRoute,
@@ -19,6 +21,12 @@ export class RepoComponent implements OnInit {
   ngOnInit(): void {
     const iid = this.ar.snapshot.params.iid;
     const rid = this.ar.snapshot.params.rid;
+    this.gs.getOrganization(iid).subscribe((data: any) => {
+      this.installation = data;
+    })
+    this.gs.getRepoInfo(iid, rid).subscribe((data: any) => {
+      this.repo = data;
+    })
     this.gs.getRepo(iid, rid).subscribe((data: any) => {
       this.branches = data;
     })

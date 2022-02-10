@@ -25,3 +25,7 @@
         padding-left:10px;
     }
 }
+
+::ng-deep .mat-tab-label {
+    max-width: 48px !important;
+}

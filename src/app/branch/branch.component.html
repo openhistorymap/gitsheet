@@ -1,4 +1,11 @@
+<mat-toolbar>
+    <mat-icon>folder</mat-icon><h1 [routerLink]="['../..']">{{installation.account.login}}</h1>
+    <span>/</span>
+    <span [routerLink]="['..']">{{repo.name}}</span>
+    <span>/</span>
+    <span>{{bid}}</span>
+</mat-toolbar>
 
 <mat-list>
-    <mat-list-item [routerLink]="[file.path]" *ngFor="let file of files">{{file.path}}</mat-list-item>
+    <mat-list-item [routerLink]="[file.path]" *ngFor="let file of files"><mat-icon>table</mat-icon>{{file.path}}</mat-list-item>
 </mat-list>

@@ -10,16 +10,27 @@ import { GitsheetService } from '../gitsheet.service';
 export class BranchComponent implements OnInit {
 
   files: any[];
+  repo: any;
+  installation: any;
+  iid: string;
+  rid: string;
+  bid: string;
   constructor(
     private ar: ActivatedRoute,
     private gs: GitsheetService
     ) { }
 
   ngOnInit(): void {
-    const iid = this.ar.snapshot.params.iid;
-    const rid = this.ar.snapshot.params.rid;
-    const bid = this.ar.snapshot.params.bid;
-    this.gs.getFiles(iid, rid, bid).subscribe((data: any) => {
+    this.iid = this.ar.snapshot.params.iid;
+    this.rid = this.ar.snapshot.params.rid;
+    this.bid = this.ar.snapshot.params.bid;
+    this.gs.getOrganization(this.iid).subscribe((ddata: any) => {
+      this.installation = ddata;
+    })
+    this.gs.getRepoInfo(this.iid, this.rid).subscribe((data: any) => {
+      this.repo = data;
+    })
+    this.gs.getFiles(this.iid, this.rid, this.bid).subscribe((data: any) => {
       this.files = data;
     })
   }

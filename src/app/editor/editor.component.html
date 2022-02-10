@@ -1,22 +1,37 @@
 <mat-toolbar>
-    <button mat-icon-button (click)="getData()"><mat-icon>arrow_left</mat-icon></button>
+    <button mat-icon-button [routerLink]="['..']"><mat-icon>arrow_left</mat-icon></button>
     {{filename}}
     <span class="spacer"></span>
+    <button mat-icon-button (click)="chatDrawer.toggle();" title="Share"><mat-icon>share</mat-icon></button>
+    <button mat-icon-button (click)="chatDrawer.toggle();" title="Download"><mat-icon>archive</mat-icon></button>
     <button mat-icon-button (click)="chatDrawer.toggle();"><mat-icon>chat</mat-icon></button>
 </mat-toolbar>
 <mat-sidenav-container class="example-container" hasBackdrop="false" >
     <mat-sidenav #chatDrawer mode="over" position="end" class="side">
-        <input type="text" style="width: calc(100% - 8px);" (keyup)="input($event)" [(ngModel)]="ttext" id="chat_in">
-        <div id="chat">
-        <div *ngFor="let msg of chat" >
-            <div class="chat_author">{{msg.u}}</div> <div class="chat_text">{{msg.text}}</div>
-        </div>
-        </div>
-        <mat-list>
-            <mat-list-item *ngFor="let msg of connecteds">
-                <mat-icon>person</mat-icon><span class=""></span>
-            </mat-list-item>
-        </mat-list>
+        <mat-tab-group>
+            <mat-tab>
+              <ng-template mat-tab-label>
+                <mat-icon class="example-tab-icon">chat</mat-icon>
+              </ng-template>
+              <input type="text" style="width: calc(100% - 8px);" (keyup)="input($event)" [(ngModel)]="ttext" id="chat_in">
+              <div id="chat">
+              <div *ngFor="let msg of chat" >
+                  <div class="chat_author">{{msg.u}}</div> <div class="chat_text">{{msg.text}}</div>
+              </div>
+              </div>            </mat-tab>
+            <mat-tab>
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">people</mat-icon>
+                  </ng-template>
+                <mat-list>
+                    <mat-list-item *ngFor="let msg of connecteds">
+                        <mat-icon>person</mat-icon><span class=""></span>
+                    </mat-list-item>
+                </mat-list>
+            </mat-tab>
+            
+</mat-tab-group>
+       
     </mat-sidenav>
     <mat-sidenav-content>
         <div id="x-spreadsheet-demo"></div>

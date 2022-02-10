@@ -1,4 +1,10 @@
+<mat-toolbar>
+    <mat-icon>folder</mat-icon><h1>{{installation.account.login}}</h1>
+    /
+    <span>{{repo.name}}</span>
+</mat-toolbar>
 
 <mat-list>
-    <mat-list-item [routerLink]="[branch.name]" *ngFor="let branch of branches">{{branch.name}}</mat-list-item>
+    <mat-list-item [routerLink]="[branch.name]" *ngFor="let branch of branches">
+        <mat-icon>branch</mat-icon>{{branch.name}}</mat-list-item>
 </mat-list>
