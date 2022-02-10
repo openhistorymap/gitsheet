@@ -115,6 +115,17 @@ export class EditorComponent implements OnInit {
 
   }
 
+  download(){
+    const data = this.spreadsheet.getData();
+    const ret = [];
+    
+    
+  }
+
+  share(){
+    navigator.clipboard.writeText(window.location.href);
+  }
+
   getData(){
     console.log(this.spreadsheet.getData());
   }

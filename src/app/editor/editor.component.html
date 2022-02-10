@@ -2,8 +2,8 @@
     <button mat-icon-button [routerLink]="['..']"><mat-icon>arrow_left</mat-icon></button>
     {{filename}}
     <span class="spacer"></span>
-    <button mat-icon-button (click)="chatDrawer.toggle();" title="Share"><mat-icon>share</mat-icon></button>
-    <button mat-icon-button (click)="chatDrawer.toggle();" title="Download"><mat-icon>archive</mat-icon></button>
+    <button mat-icon-button (click)="share();" title="Share"><mat-icon>share</mat-icon></button>
+    <button mat-icon-button (click)="download();" title="Download"><mat-icon>archive</mat-icon></button>
     <button mat-icon-button (click)="chatDrawer.toggle();"><mat-icon>chat</mat-icon></button>
 </mat-toolbar>
 <mat-sidenav-container class="example-container" hasBackdrop="false" >
